@@ -54,6 +54,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					if (resp.status == 201) {
 						await getActions().getContacts()
+					} if (resp.status == 400) {
+						await getActions().getContacts()
 					}
 				} catch (error) {
 					console.log(error)
