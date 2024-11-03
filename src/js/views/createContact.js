@@ -1,49 +1,74 @@
-import React from "react";
-import { useContext, useState } from "react";
-import {Context} from "../store/appContext.js";
-import { Link, useNavigate } from "react-router-dom";
-
+import React, {  useState, useContext, useEffect } from "react";
+import { Context } from "../store/appContext";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const CreateContact = () => {
-  
-  const {actions} = useContext(Context);
-  const navigate = useNavigate();
-  const[newContact, setNewContact ] = useState ({});
+    const {actions, store} = useContext(Context);
+    const navigate = useNavigate();
+    const emptyContact = {name: "", email: "", phone: "", address: "" };
+    const [contact, setContact] = useState(emptyContact);
+    const {id} = useParams();
+    const isEditing = Boolean(id);
 
+    useEffect(() => {
+        if (isEditing) {
+            const existingContact = store.contacts.find((contact) => contact.id === parseInt(id));
+            if (existingContact) {
+                setContact(existingContact);
+            }             
+        } else {
+            setContact(emptyContact);
+        }
+    }, [id, store.contacts, isEditing]);
 
-    return (
+    
+    const handler = async () => {
+        if (!contact.name.trim()) {
+            alert("Full name cannot be empty");
+            return;
+        }
+
+        if (isEditing) {
+            await actions.editContact(id, contact);
+        } else {
+            await actions.createContact(contact);
+        }
+        navigate("/");
+    };
+
+    return(
         <>
         <div className="container">
-        <div className="mb-3">
-  <label for="exampleFormControlInput1" className="form-label fw-bold ">Full Name</label>
-  <input onChange={(evento) => setNewContact({...newContact, name:evento.target.value})} value={newContact.name || ""}  type="text" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-</div>
+            <div className="mb-3">
+                <label htmlFor="Full Name" className="form-label fw-bold">Full name</label>
+                <input onChange={(evento) => setContact({...contact, name:evento.target.value})} value={contact.name || ''} type="text" className="form-control" placeholder="Full name" />
+                <div className="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div className="mb-3">
+                <label htmlFor="email" className="form-label fw-bold">Email</label>
+                <input onChange={(evento) => setContact({...contact, email:evento.target.value })} value={contact.email || ''} type="email" className="form-control" placeholder="Email" />
+                <div className="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div className="mb-3">
+                <label htmlFor="phone" className="form-label fw-bold">Enter phone</label>
+                <input onChange={(evento) => setContact({...contact, phone:evento.target.value})} value={contact.phone || ''} type="phone" className="form-control" placeholder="Enter phone" />
+                <div className="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div className="mb-3">
+                <label htmlFor="address" className="form-label fw-bold">Enter address</label>
+                <input onChange={(evento) => setContact({...contact, address:evento.target.value})} value={contact.address || ''} type="text" className="form-control" placeholder="Enter address" />
+                <div className="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div className="d-flex justify-content-center gap-5">
+                <button onClick={handler} type="submit" className={`btn mr-5 ${isEditing ? "btn-warning" : "btn-primary"}`}>
+                    {isEditing ? "Edit" : "Save"}
+                </button>
 
-<div class="mb-3">
-  <label for="exampleFormControlInput1" class="form-label fw-bold ">Email address</label>
-  <input onChange={(evento) => setNewContact({...newContact, email:evento.target.value})} value={newContact.email || ""} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-</div>
-
-<div className="mb-3">
-  <label for="exampleFormControlInput1" className="form-label fw-bold ">Phone</label>
-  <input onChange={(evento) => setNewContact({...newContact,phone:evento.target.value })} value={newContact.phone || ""} type="phone" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-</div>
-
-<div className="mb-3">
-  <label for="exampleFormControlInput1" className="form-label fw-bold ">Address</label>
-  <input onChange={(evento) => setNewContact({...newContact, address:evento.target.value})} value={newContact.address || ""} type="text" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-</div>
-
- <button  onClick={async ()=> {
-  
-  await actions.createContact(newContact)
-  navigate("/")
-  }} type="submit" className="btn btn-primary"> Submit </button>
- <Link to="/">
-  <button classNameName="btn btn-primary">Back home</button>
-	</Link>
-
-</div>
-        </>
+                <Link to="/">
+                    <button className="btn btn-primary">Back home</button>
+                </Link>
+            </div>
+        </div>
+            </>
     )
 }

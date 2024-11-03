@@ -9,11 +9,15 @@ export const Home = () => {
 	const {actions, store} = useContext(Context)
 
 	return (
-	<div className="text-center mt-5">
+			<div class="container text-center">
+			<div class="row">
+			<div class="col-md-8">
 		{
 			store.contacts.map((item, index) =>{
-				return <ContactCard key={index} name={item.name} />
+				return <ContactCard key={index} name={item.name} id={item.id} address={item.address} email={item.email} phone={item.phone} />
 			})
 		}
-	</div>
+		</div>
+		</div>
+		</div>
 )};

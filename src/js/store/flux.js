@@ -52,9 +52,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: { "Content-Type": "application/json" }
 					})
-					if (resp.status == 201) {
+					if (resp.status === 201) {
 						await getActions().getContacts()
-					} if (resp.status == 400) {
+					} if (resp.status === 400) {
 						await getActions().getContacts()
 					}
 				} catch (error) {
@@ -66,13 +66,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getContacts: async () => {
 				const resp = await fetch(process.env.BACKEND_URL+`agendas/embrana`);
 				if(resp.status == 404){
-					await getActions().createAgenda()  // Se crea la nueva agenda usando el método Actions
+					await getActions().createAgenda()
 					return null
+					console.log("--->>> NUEVA AGENDA CREADA<---");
 				}
 				const data = await resp.json();
-				console.log(data);
-				setStore({contacts: data.contacts})
-				console.log(data.contacts)
+				setStore({ contacts: data.contacts });
 			},
 
 			createContact: async(newContact) => {
@@ -84,13 +83,37 @@ const getState = ({ getStore, getActions, setStore }) => {
   				method: "POST",
   				body: JSON.stringify(newContact),
   				headers: myHeaders,
-});
+			});
 			if(resp.ok)	 {
 				await getActions().getContacts();
-				console.log();
-			}		 
-
-}
+			}				
+			},
+			deleteContact: async (contct_id) => {
+				const resp = await fetch(process.env.BACKEND_URL+`agendas/embrana/contacts/${contct_id}`, {
+					method: "DELETE",
+				});
+				if (resp.ok) {
+					await getActions().getContacts()
+				} else {
+					console.error("Error al eliminar la tarea");
+				}
+			},
+			editContact: async (id, updatedContact) => {
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/json");
+			
+				const resp = await fetch(`${process.env.BACKEND_URL}agendas/embrana/contacts/${id}`, {
+					method: "PUT",
+					headers: myHeaders,
+					body: JSON.stringify(updatedContact),
+				});
+			
+				if (resp.ok) {
+					await getActions().getContacts();
+				} else {
+					console.error("Error al editar el contacto");
+				}
+			},
 		}
 	};
 };
