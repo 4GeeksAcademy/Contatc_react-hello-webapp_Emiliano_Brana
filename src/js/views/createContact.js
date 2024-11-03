@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 export const CreateContact = () => {
+  
   const {actions} = useContext(Context);
   const navigate = useNavigate();
   const[newContact, setNewContact ] = useState ({});
@@ -20,26 +21,26 @@ export const CreateContact = () => {
 
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label fw-bold ">Email address</label>
-  <input onChange={(evento) => setNewContact({...newContact, email:evento.target.value})} value={newContact.email || ""} type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+  <input onChange={(evento) => setNewContact({...newContact, email:evento.target.value})} value={newContact.email || ""} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
 </div>
 
-<div class="mb-3">
-  <label for="exampleFormControlInput1" class="form-label fw-bold ">Phone</label>
-  <input onChange={(evento) => setNewContact({...newContact,phone:evento.target.value })} value={newContact.phone || ""} type="phone" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+<div className="mb-3">
+  <label for="exampleFormControlInput1" className="form-label fw-bold ">Phone</label>
+  <input onChange={(evento) => setNewContact({...newContact,phone:evento.target.value })} value={newContact.phone || ""} type="phone" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
 </div>
 
-<div class="mb-3">
-  <label for="exampleFormControlInput1" class="form-label fw-bold ">Address</label>
-  <input onChange={(evento) => setNewContact({...newContact, address:evento.target.value})} value={newContact.address || ""} type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+<div className="mb-3">
+  <label for="exampleFormControlInput1" className="form-label fw-bold ">Address</label>
+  <input onChange={(evento) => setNewContact({...newContact, address:evento.target.value})} value={newContact.address || ""} type="text" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
 </div>
 
  <button  onClick={async ()=> {
   
   await actions.createContact(newContact)
   navigate("/")
-  }} type="submit" class="btn btn-primary"> Submit </button>
+  }} type="submit" className="btn btn-primary"> Submit </button>
  <Link to="/">
-  <button className="btn btn-primary">Back home</button>
+  <button classNameName="btn btn-primary">Back home</button>
 	</Link>
 
 </div>
