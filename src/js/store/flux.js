@@ -46,8 +46,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Create agenda
 			createAgenda: async () => {
 				try {
-					const myHeaders = new Headers();
-					myHeaders.append("Content-Type", "application/json");
 					const resp = await fetch(process.env.BACKEND_URL+`agendas/embrana`, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" }
